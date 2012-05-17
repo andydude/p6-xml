@@ -1,6 +1,6 @@
 use XML::External;
 grammar XML::Document is XML::External;
-rule TOP {^ <prin> $}
+rule TOP { ^ <document> $ }
 
 # [1] document
 rule document {
