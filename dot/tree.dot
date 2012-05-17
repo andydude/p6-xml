@@ -1,0 +1,240 @@
+digraph Perl6XML {
+	rankdir=LR;
+    ranksep=1;
+    node [shape=box,style=filled,fillcolor=silver,color=gray];
+	edge [color=black]
+    compound=true;
+
+subgraph cluster_Common {
+	color=blue;
+	fillcolor=lightblue;
+    style=filled;
+
+	//
+	xml_decl
+	version
+	encoding
+	enc_name
+	char
+	content
+	sd_decl
+	prin
+    prin_target
+	comment
+	version_num
+	eq
+	reference
+	cd_sect
+	cd_start
+	cd_end
+	cd_data
+	prin
+	comment
+	char_data
+	value
+	attribute
+	content
+	e_tag
+	elem_tag_pair
+	element
+	empty_elem_tag
+	s_tag
+	misc
+
+	reference -> entity_ref
+	reference -> char_ref
+	text_decl
+    }
+
+subgraph cluster_Name {
+	color=green;
+	fillcolor=lightgreen;
+    style=filled;
+	name
+	name_char
+	name_start_char
+}
+
+subgraph cluster_External {
+	color=red;
+	fillcolor=lightpink;
+    style=filled;
+
+	//
+	names
+	ext_parsed_ent
+    markup_decl
+	element_decl
+    attlist_decl
+    entity_decl
+    notation_decl
+	ext_subset
+	ext_subset_decl
+	markup_decl
+	conditional_sect
+    decl_sep
+	entity_value
+	pe_reference
+	int_subset
+	nmtoken
+	nmtokens
+
+
+	//element_decl -> name
+	element_decl -> content_spec
+	content_spec -> mixed
+    content_spec -> children
+	children -> choice
+	children -> seq
+    //cp -> name
+	cp -> choice
+	cp -> seq
+	choice -> cp
+	seq -> cp
+	//mixed -> name
+	//attlist_decl -> name
+	attlist_decl -> att_def
+	//att_def -> name
+	att_def -> att_type
+	att_def -> default_decl
+	att_type -> string_type
+	att_type -> tokenized_type
+	enumerated_type -> notation_type
+	enumerated_type -> enumeration
+	//notation_type -> name
+	enumeration -> nmtoken
+	default_decl -> value
+	conditional_sect -> include_sect
+	conditional_sect -> ignore_sect
+
+    // TODO
+	//include_sect
+	//ignore_sect
+	doctype_decl
+
+	//entity_ref -> name
+	//pe_reference -> name
+	entity_decl -> ge_decl
+	entity_decl -> pe_decl
+	//ge_decl -> name
+	ge_decl -> entity_def
+	//pe_decl -> name
+	pe_decl -> pe_def
+	entity_def -> entity_value
+	entity_def -> external_id
+	entity_def -> ndatadecl
+	pe_def -> entity_value
+	pe_def -> external_id
+	external_id -> system_literal
+	external_id -> pubid_literal
+    //ndatadecl -> name
+	pubid_char
+    public_id
+    }
+
+subgraph cluster_Document {
+	color=purple;
+    fillcolor=lavender;
+    style=filled;
+
+	//
+	document
+	prolog
+    }
+
+
+	// edges
+
+	document -> prolog
+	document -> element
+	document -> misc
+
+	name_char -> name_start_char
+	name -> name_start_char
+	name -> name_char
+	names -> name
+	nmtoken -> name_char
+	nmtokens -> nmtoken
+	entity_value -> pe_reference
+	entity_value -> reference
+	value -> reference
+	pubid_literal -> pubid_char
+	comment -> char
+	prin -> prin_target
+	prin -> char
+	//prin_target -> name
+
+	cd_sect -> cd_start
+	cd_sect -> cd_data
+	cd_sect -> cd_end
+	cd_data -> char
+
+	prolog -> xml_decl
+	prolog -> misc
+	prolog -> doctype_decl
+	xml_decl -> version
+	xml_decl -> encoding
+	xml_decl -> sd_decl
+	version -> eq
+	version -> version_num
+	misc -> comment
+	misc -> prin
+
+	//doctype_decl -> name
+	doctype_decl -> external_id
+	doctype_decl -> int_subset
+	decl_sep -> pe_reference
+    int_subset -> markup_decl
+    int_subset -> decl_sep
+	markup_decl -> element_decl
+	markup_decl -> attlist_decl
+	markup_decl -> entity_decl
+	markup_decl -> notation_decl
+	markup_decl -> prin
+	markup_decl -> comment
+	ext_subset -> text_decl
+	ext_subset -> ext_subset_decl
+	ext_subset_decl -> markup_decl
+	ext_subset_decl -> conditional_sect
+	ext_subset_decl -> decl_sep
+	sd_decl -> eq
+	
+	element -> empty_elem_tag
+	element -> elem_tag_pair
+	elem_tag_pair -> s_tag
+	elem_tag_pair -> content
+	elem_tag_pair -> e_tag
+	//s_tag -> name
+	s_tag -> attribute
+	//attribute -> name
+	attribute -> eq
+	attribute -> value
+	//e_tag -> name
+
+	// [43]
+	content -> char_data
+	content -> element
+	content -> reference
+	content -> cd_sect
+	content -> prin
+	content -> comment
+	//empty_elem_tag -> name
+	empty_elem_tag -> attribute
+
+    // [77]
+	text_decl -> version
+	text_decl -> encoding
+
+	ext_parsed_ent -> text_decl
+	ext_parsed_ent -> content
+	encoding -> enc_name
+
+	// [82]
+	notation_decl -> external_id
+	notation_decl -> public_id
+	public_id -> pubid_literal
+
+	// labels
+	document [label="Document"]		//1
+	ext_subset [label="ExtSubset"]
+}

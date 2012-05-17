@@ -1,0 +1,23 @@
+Graph of the modularized XML grammars.
+
+This is a graph of the particluar way in which the standard XML grammar
+is broken up into 3+ modules, hopefully to improve code reuse, and to
+allow building custom XML languages which might not use DTD rules.
+
+The subgraphs are colored accordingly:
+
+	green   - Charset.pm
+	blue	- Common.pm
+	red     - External.pm
+	purple	- Document.pm
+
+The design principle behind this was to find subsets of the XML grammar
+in which all arrows of use were going in one direction (which would imply
+no inheritance loops) since the easiest way to import a grammar seems to
+be to subclass it. Since DTD based schemas are becoming more rare as
+time goes by, I tried to keep them as separate as possible. So all of the
+critical XML rules are in XML::Charset and XML::Common, and the DTD rules
+are found in XML::External. The XML::Document grammar is very simple; it
+just subclasses XML::External (which in turn subclasses XML::Common), and
+adds 2 rules: <document> and <prolog> which combines rules from the other
+grammars to define the grammar for a complete XML document.
